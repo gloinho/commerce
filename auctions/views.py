@@ -5,8 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from .models import *
 from django import forms
-
 from .models import User
+import os
 
 
 def index(request):
@@ -67,7 +67,7 @@ def register(request):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['product', 'first_price', 'image', 'category']
+        fields = ['product', 'first_price', 'image', 'category','description']
         widgets = {
             'product': forms.TextInput(attrs={"class":"form-control",
                                               "id":"productname",
@@ -79,8 +79,11 @@ class ProductForm(forms.ModelForm):
                                                     "id":"price", 
                                                     "placeholder":"Enter the inicial price"}),
             'image': forms.ClearableFileInput(attrs={"class":"custom-file-input", 
-                                                     "id":"image"}),
-            'category': forms.Select(attrs={"id":"category", "class":"custom-select"})
+                                                     "id":"image",}),
+            'category': forms.Select(attrs={"id":"category", "class":"custom-select"}),
+            'description': forms.Textarea(attrs={"id":"description", 
+                                                 "class":"form-control", 
+                                                 "placeholder":"Product Description"}),
         }
         
 def new_product(request):
@@ -95,3 +98,4 @@ def new_product(request):
             print(form.errors)
         return HttpResponseRedirect(reverse('index'))
     return render(request, 'auctions/new_product.html', {'form': ProductForm})
+

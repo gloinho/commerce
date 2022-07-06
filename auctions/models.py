@@ -30,6 +30,7 @@ class Product(models.Model):
     register_date = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to=f'./auctions/static/auctions/images') # ImageField instances are created in your database as varchar columns 
     category = models.CharField(max_length=19, choices=CATEGORY_CHOICES, default='No Category')
+    description = models.CharField(max_length=500, blank=True)
     
     def __str__(self) -> str:
         return f'{self.product}: R$: {self.first_price}'
