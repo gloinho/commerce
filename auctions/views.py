@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .models import *
-from django.forms import ModelForm
+from django import forms
 
 from .models import User
 
@@ -64,18 +64,20 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-class ProductForm(ModelForm):
+class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['product', 'first_price', 'image']
+        widgets = {
+            'product': forms.TextInput(attrs={"class":"form-control","id":"productname","placeholder":"Enter the product's name"}),
+            'first_price': forms.NumberInput(attrs={"min":"0", "value":"0", "step":".01", "class":"form-control", "id":"price", "placeholder":"Enter the inicial price"}),
+            'image': forms.FileInput(attrs={"class":"custom-file-input", "id":"image"})
+        }
         
 def new_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid:
-            
-        
-
+            form.save()
         return HttpResponseRedirect(reverse('index'))
-        
-    return render(request, 'auctions/new_product.html')
+    return render(request, 'auctions/new_product.html', {'form': ProductForm})
