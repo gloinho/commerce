@@ -13,10 +13,23 @@ class Product(models.Model):
     """
     Register a product.
     """
+
+    CATEGORY_CHOICES=[
+        ("Men's Fashion","Men's Fashion"),
+        ('Home and Kitchen','Home and Kitchen'),
+        ('Collectible','Collectible'),
+        ('Eletronics','Eletronics'),
+        ('Office','Office'),
+        ('Arts and Crafts','Arts and Crafts'),
+        ('Sports and Outdoors','Sports and Outdoors'),
+        ('Tools','Tools'),
+        ('No Category','No Category'),
+    ]
     product = models.CharField(max_length=64)
     first_price = models.DecimalField(max_digits=10, decimal_places=2)
     register_date = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to=f'./auctions/static/auctions/images') # ImageField instances are created in your database as varchar columns 
+    category = models.CharField(max_length=19, choices=CATEGORY_CHOICES, default='No Category')
     
     def __str__(self) -> str:
         return f'{self.product}: R$: {self.first_price}'

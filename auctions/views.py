@@ -67,19 +67,28 @@ def register(request):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['product', 'first_price', 'image']
+        fields = ['product', 'first_price', 'image', 'category']
         widgets = {
-            'product': forms.TextInput(attrs={"class":"form-control","id":"productname","placeholder":"Enter the product's name"}),
-            'first_price': forms.NumberInput(attrs={"min":"0", "value":"0", "step":".01", "class":"form-control", "id":"price", "placeholder":"Enter the inicial price"}),
-            'image': forms.ClearableFileInput(attrs={"class":"custom-file-input", "id":"image"})
+            'product': forms.TextInput(attrs={"class":"form-control",
+                                              "id":"productname",
+                                              "placeholder":"Enter the product's name"}),
+            'first_price': forms.NumberInput(attrs={"min":"0", 
+                                                    "value":"0", 
+                                                    "step":".01", 
+                                                    "class":"form-control", 
+                                                    "id":"price", 
+                                                    "placeholder":"Enter the inicial price"}),
+            'image': forms.ClearableFileInput(attrs={"class":"custom-file-input", 
+                                                     "id":"image"}),
+            'category': forms.Select(attrs={"id":"category", "class":"custom-select"})
         }
         
 def new_product(request):
     if request.method == 'POST':
+    # FILES will only contain data if the request method was POST and 
+    # the <form> that posted to the request had enctype="multipart/form-data". 
+    # Otherwise, FILES will be a blank dictionary-like object.
         form = ProductForm(request.POST, request.FILES) 
-        # FILES will only contain data if the request method was POST and the <form> 
-        # that posted to the request had enctype="multipart/form-data". 
-        # Otherwise, FILES will be a blank dictionary-like object.
         if form.is_valid():
             form.save()
         else:
