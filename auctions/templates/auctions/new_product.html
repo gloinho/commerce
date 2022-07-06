@@ -2,7 +2,7 @@
 
 {% block body %}
     <div>
-        <form action="{% url 'new_product' %}" method="POST">
+        <form action="{% url 'new_product' %}" method="POST" enctype="multipart/form-data">
             {%csrf_token%}
             <div class="form-row">
                 <div class="col-3">

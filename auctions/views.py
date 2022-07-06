@@ -71,13 +71,18 @@ class ProductForm(forms.ModelForm):
         widgets = {
             'product': forms.TextInput(attrs={"class":"form-control","id":"productname","placeholder":"Enter the product's name"}),
             'first_price': forms.NumberInput(attrs={"min":"0", "value":"0", "step":".01", "class":"form-control", "id":"price", "placeholder":"Enter the inicial price"}),
-            'image': forms.FileInput(attrs={"class":"custom-file-input", "id":"image"})
+            'image': forms.ClearableFileInput(attrs={"class":"custom-file-input", "id":"image"})
         }
         
 def new_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid:
+        form = ProductForm(request.POST, request.FILES) 
+        # FILES will only contain data if the request method was POST and the <form> 
+        # that posted to the request had enctype="multipart/form-data". 
+        # Otherwise, FILES will be a blank dictionary-like object.
+        if form.is_valid():
             form.save()
+        else:
+            print(form.errors)
         return HttpResponseRedirect(reverse('index'))
     return render(request, 'auctions/new_product.html', {'form': ProductForm})
