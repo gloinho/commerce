@@ -1,0 +1,46 @@
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+
+class User(AbstractUser):
+    """
+    Register a user.
+    """
+    ...
+    
+
+class Product(models.Model):
+    """
+    Register a product.
+    """
+    product = models.CharField(max_length=64)
+    first_price = models.DecimalField(max_digits=10, decimal_places=2)
+    register_date = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to=f'./auctions/static/auctions/images') # ImageField instances are created in your database as varchar columns 
+    
+    def __str__(self) -> str:
+        return f'{self.product}: R$: {self.first_price}'
+    
+class Bid(models.Model):
+    """
+    Register the price of the bid, the product bidded and the user who bids.
+    One-to-Many relationship with product and user
+    """
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productbid' )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userbid')
+    bid_price = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def __str__(self) -> str:
+        return f'{self.user} made a R$: {self.bid_price} bid on {self.product}'
+    
+class Comment(models.Model):
+    """
+    Register a comment on a auction listing
+    """
+    comment = models.CharField(max_length=400)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='usercomment')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productcomment')
+    comment_date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self) -> str:
+        return f"{self.user}'s comment"

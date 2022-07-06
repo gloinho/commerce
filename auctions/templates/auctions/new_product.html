@@ -1,0 +1,36 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+    <div>
+        <form action="{% url 'new_product' %}" method="POST">
+            {%csrf_token%}
+            <div class="form-row" style="align-items:center">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="productname">Product Name</label>
+                        <input type="text" class="form-control" id="productname" name="productname" placeholder="Enter the product's name">
+                    </div>
+                </div>
+                <div class="col-4-5">
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" min="0" value="0" step=".01" class="form-control" id="price" name="price" placeholder="Enter the inicial price">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row" style="align-items:center">
+                <div class="col-5">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="image" name="image">
+                        <label class="custom-file-label" for="image">Choose image</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row" style="align-items:center">
+                <div class="col">
+                    <button style="margin-top:16px" class="btn btn-outline-secondary" type="submit" id="button-addon1">Add Product</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
