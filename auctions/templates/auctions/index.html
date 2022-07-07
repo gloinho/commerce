@@ -9,7 +9,7 @@
         <div class="img-thumbnail listings">              
             <div class="image" style="text-align:center">
                 <picture>
-                    <img class="card-img-top img-fluid img-thumbnail" src="static/auctions/images/{{product|get_image}}">
+                    {%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static product|get_image %}">
                 </picture> 
             </div>
             <div class="card-body">

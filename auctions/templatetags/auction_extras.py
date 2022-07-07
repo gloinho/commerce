@@ -9,7 +9,7 @@ def get_image(prod):
     """
     Returns the file name.
     """
-    return os.path.basename(prod.image.name)
+    return os.path.join('auctions/images',os.path.basename(prod.image.name))
 
 @register.filter
 def get_bid(prod):

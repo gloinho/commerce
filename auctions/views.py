@@ -10,6 +10,9 @@ import os
 
 
 def index(request):
+    """
+    Show all listings
+    """
     return render(request, "auctions/index.html", {
         'products': Product.objects.all()
     })
@@ -88,6 +91,9 @@ class ProductForm(forms.ModelForm):
         }
         
 def new_product(request):
+    """
+    Register a new product
+    """
     if request.method == 'POST':
     # FILES will only contain data if the request method was POST and 
     # the <form> that posted to the request had enctype="multipart/form-data". 
@@ -99,4 +105,10 @@ def new_product(request):
             print(form.errors)
         return HttpResponseRedirect(reverse('index'))
     return render(request, 'auctions/new_product.html', {'form': ProductForm})
+
+def listing_details(request, id):
+    product = Product.objects.get(id=int(id))
+    return render(request, 'auctions/listing.html',{
+        'product':product
+    })
 
