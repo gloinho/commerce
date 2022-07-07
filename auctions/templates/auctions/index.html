@@ -1,13 +1,24 @@
 {% extends "auctions/layout.html" %}
-{% load imagetag %}
+{% load auction_extras %}
+
+
 {% block body %}
     <h2>Active Listings</h2>
-
     {% for product in products%}
-    <div>
-        {{images}}
-        {{product.product}}
-        <img class="img-thumbnail" src="static/auctions/images/{{product|get_image}}">
+    <div class="card" style="width: 400px; margin: 20px;">
+        <div class="img-thumbnail listings">              
+            <div class="image" style="text-align:center">
+                <picture>
+                    <img class="card-img-top img-fluid img-thumbnail" src="static/auctions/images/{{product|get_image}}">
+                </picture> 
+            </div>
+            <div class="card-body">
+                <div class="card-title" id="product">{{product.product}}</div>
+                <div class="card-text" id="price">Price: ${{product.first_price}}</div>
+                <div class='card-text'id="date">{{product.register_date}}</div>
+                <div class='card-text'id="description">{{product.description}}</div>
+            </div>
+        </div>
     </div>
     {% endfor %}
 {% endblock %}
