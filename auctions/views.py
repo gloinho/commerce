@@ -10,8 +10,9 @@ import os
 
 
 def index(request):
-    return render(request, "auctions/index.html")
-
+    return render(request, "auctions/index.html", {
+        'products': Product.objects.all()
+    })
 
 def login_view(request):
     if request.method == "POST":

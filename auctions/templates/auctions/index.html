@@ -1,7 +1,13 @@
 {% extends "auctions/layout.html" %}
-
+{% load imagetag %}
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+    {% for product in products%}
+    <div>
+        {{images}}
+        {{product.product}}
+        <img class="img-thumbnail" src="static/auctions/images/{{product|get_image}}">
+    </div>
+    {% endfor %}
 {% endblock %}
