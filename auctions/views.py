@@ -1,3 +1,4 @@
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -5,8 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from .models import *
 from django import forms
-from .models import User
-import os
+
 
 
 def index(request):
@@ -106,9 +106,36 @@ def new_product(request):
         return HttpResponseRedirect(reverse('index'))
     return render(request, 'auctions/new_product.html', {'form': ProductForm})
 
-def listing_details(request, id):
-    product = Product.objects.get(id=int(id))
-    return render(request, 'auctions/listing.html',{
-        'product':product
-    })
+class BidForm(forms.ModelForm):
+    class Meta:
+        model = Bid
+        fields = ['bid_price']
+        exclude = ('product', 'user')
 
+        
+def listing(request, id):
+    listing = Product.objects.get(id=int(id))
+    user = request.user
+    min_bid = Bid.objects.filter(product = listing.id).last().bid_price
+    if request.method == 'POST':
+        form = BidForm(request.POST)
+        if form.is_valid():
+            bid = form.save(commit=False)
+            bid.product = listing
+            bid.user = user
+            bid_price = form.cleaned_data['bid_price']
+            if bid_price <= min_bid:
+                message = f'Your bid (${bid_price}) is invalid. Needs to be greater than ${min_bid}.'
+                return render(request, 'auctions/listing.html', {
+                    'message': message,
+                    'bidform': BidForm,
+                    'product': listing
+                }) 
+            else:
+                bid.save()
+        else:
+            return HttpResponse('error')
+    return render(request, 'auctions/listing.html', {
+        'bidform': BidForm,
+        'product': listing
+    }) 

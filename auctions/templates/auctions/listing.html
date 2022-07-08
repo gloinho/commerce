@@ -2,10 +2,22 @@
 {% load auction_extras %}
 
 {% block body %}
-
-<h1>{{product.product}}</h1>
-<picture>
-    {%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static product|get_image %}">
-</picture> 
-
+ 
+    <h1>{{product.product}}</h1>
+    <picture>
+        {%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static product|get_image %}">
+    </picture>
+    {% if product|get_bid == None %} 
+        <h1>Current price: ${{product.first_price}}</h1>
+    {%else%}
+        <h1>Current price: ${{product|get_bid}}</h1>
+    {%endif%}
+    <form action="{% url 'listing' product.id %}" method="POST">
+        {%csrf_token%}
+        {%if message %}
+        <h1>{{message}}</h1> # TODO APLLY CSS 
+        {%endif%}
+        {{bidform}}
+        <input type="submit">
+   </form>
 {% endblock %}

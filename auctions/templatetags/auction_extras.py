@@ -16,4 +16,4 @@ def get_bid(prod):
     """
     Return the last bid of a product
     """
-    return Bid.objects.filter(product = prod.id).last()
+    return Bid.objects.filter(product = prod.id).last().bid_price
