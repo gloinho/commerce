@@ -72,6 +72,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['product', 'first_price', 'image', 'category','description']
+        exclude = ('listed_by',)
         widgets = {
             'product': forms.TextInput(attrs={"class":"form-control",
                                               "id":"productname",
@@ -94,12 +95,15 @@ def new_product(request):
     """
     Register a new product
     """
+    user = request.user
     if request.method == 'POST':
     # FILES will only contain data if the request method was POST and 
     # the <form> that posted to the request had enctype="multipart/form-data". 
     # Otherwise, FILES will be a blank dictionary-like object.
         form = ProductForm(request.POST, request.FILES) 
         if form.is_valid():
+            product = form.save(commit=False)
+            product.listed_by = user
             form.save()
         else:
             print(form.errors)
@@ -116,7 +120,11 @@ class BidForm(forms.ModelForm):
 def listing(request, id):
     listing = Product.objects.get(id=int(id))
     user = request.user
-    min_bid = Bid.objects.filter(product = listing.id).last().bid_price
+    min_bid = Bid.objects.filter(product = listing.id).last()
+    if not min_bid:
+        min_bid = listing.first_price
+    else:
+        min_bid = min_bid.bid_price
     if request.method == 'POST':
         form = BidForm(request.POST)
         if form.is_valid():
