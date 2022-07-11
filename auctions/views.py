@@ -161,16 +161,21 @@ def listing(request, id):
         'onwatchlist': on_watchlist(request, id)
     }) 
     
-def add_watchlist(request, id):
+def watchlist(request, id):
     user = request.user
     if not on_watchlist(request, id):
         try:
             watchlist = Watchlist.objects.create(user=user)
         except:
             watchlist = user.watchlist
+    watchlist = user.watchlist
     if request.method == 'POST': 
-        watchlist.product.add((id))
-        watchlist.save()
+        if 'add_to_watchlist' in request.POST:
+            watchlist.product.add((id))
+            watchlist.save()
+        elif 'remove_from_watchlist' in request.POST:
+            watchlist.product.remove(id)
+            watchlist.save()
         return HttpResponseRedirect(reverse('listing', args=[id]))
     return HttpResponseRedirect(reverse('listing', args=[id]))
         

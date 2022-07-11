@@ -22,11 +22,17 @@
    </form>
 
    {%if not onwatchlist %}
-        <form action="{%url 'add_watchlist' product.id %}" method="POST">
+        <form action="{%url 'watchlist' product.id %}" method="POST">
             {%csrf_token%}
-            <input type="submit">
+            <button type="submit" name="add_to_watchlist">Add to Watchlist</button>
+        </form>
+    {%else%}
+        <form action="{% url 'watchlist' product.id %}" method="POST">
+            {%csrf_token%}
+            <button type="submit" name="remove_from_watchlist">Remove from Watchlist</button>
         </form>
     {%endif%}
+
 
    <h1>Details</h1>
    {{product.listed_by}}
