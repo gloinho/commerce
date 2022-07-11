@@ -114,6 +114,7 @@ class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
         fields = ['bid_price']
+        widgets = {'bid_price': forms.NumberInput(attrs={'min':0})}
         exclude = ('product', 'user')
         
 def on_watchlist(request, id):
@@ -179,5 +180,12 @@ def watchlist(request, id):
         return HttpResponseRedirect(reverse('listing', args=[id]))
     return HttpResponseRedirect(reverse('listing', args=[id]))
         
-
-    
+def close_listing(request, id):
+    listing = Product.objects.get(pk=int(id))
+    if request.method == 'POST':
+        listing.is_active = False
+        listing.save()
+        return HttpResponseRedirect(reverse('listing', args=[id]))
+    return HttpResponseRedirect(reverse('listing', args=[id]))
+        
+        

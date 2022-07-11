@@ -2,38 +2,55 @@
 {% load auction_extras %}
 
 {% block body %}
- 
-    <h1>{{product.product}}</h1>
-    <picture>
-        {%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static product|get_image %}">
-    </picture>
-    {% if product|get_bid == None %} 
-        <h1>Current price: ${{product.first_price}}</h1>
-    {%else%}
-        <h1>Current price: ${{product|get_bid}}</h1>
-    {%endif%}
-    <form action="{% url 'listing' product.id %}" method="POST">
-        {%csrf_token%}
-        {%if message %}
-        <h1>{{message}}</h1> # TODO APLLY CSS 
+<h1>{{product.product}}</h1>
+<picture>
+    {%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static product|get_image %}">
+</picture>
+{% if product.is_active %}
+        {% if product|get_bid == None %} 
+            <h1>Current price: ${{product.first_price}}</h1>
+        {%else%}
+            <h1>Current price: ${{product|get_bid}}</h1>
         {%endif%}
-        {{bidform}}
-        <input type="submit">
-   </form>
-
-   {%if not onwatchlist %}
-        <form action="{%url 'watchlist' product.id %}" method="POST">
-            {%csrf_token%}
-            <button type="submit" name="add_to_watchlist">Add to Watchlist</button>
-        </form>
+        {% if user.is_authenticated %}
+            {% if product.listed_by.username != user.username%}
+            <form action="{% url 'listing' product.id %}" method="POST">
+                {%csrf_token%}
+                {%if message %}
+                    <h1>{{message}}</h1> # TODO APLLY CSS 
+                {%endif%}
+                {{bidform}}
+                <input type="submit">
+            </form>
+            {%else%}
+                <form action="{%url 'close_listing' product.id %}" method="POST">
+                    {%csrf_token%}
+                    <button type="submit" name="close_listing">Close Listing</button>
+                </form>
+            {%endif%}
+        {%if not onwatchlist %}
+            <form action="{%url 'watchlist' product.id %}" method="POST">
+                {%csrf_token%}
+                <button type="submit" name="add_to_watchlist">Add to Watchlist</button>
+            </form>
+        {%else%}
+            <form action="{% url 'watchlist' product.id %}" method="POST">
+                {%csrf_token%}
+                <button type="submit" name="remove_from_watchlist">Remove from Watchlist</button>
+            </form>
+        {%endif%}
+        {% else %}
+            Not signed in.
+        {% endif %}
+{%else%}
+    {% if product|get_bid == None %} 
+    <h1>Final price: ${{product.first_price}}</h1>
     {%else%}
-        <form action="{% url 'watchlist' product.id %}" method="POST">
-            {%csrf_token%}
-            <button type="submit" name="remove_from_watchlist">Remove from Watchlist</button>
-        </form>
+    <h1>Final price: ${{product|get_bid}}</h1>
     {%endif%}
-
-
+    <h1>Winner: {{product.productbid.last.user.username}}</h1>
+{%endif%}
+ 
    <h1>Details</h1>
    {{product.listed_by}}
    {{product.category}}

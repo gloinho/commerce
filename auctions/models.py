@@ -32,6 +32,7 @@ class Product(models.Model):
     category = models.CharField(max_length=19, choices=CATEGORY_CHOICES, default='No Category')
     description = models.CharField(max_length=500, blank=True)
     listed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listedby')
+    is_active = models.BooleanField(default=True)
     
     
     def __str__(self) -> str:
