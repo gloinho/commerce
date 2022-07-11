@@ -117,6 +117,10 @@ class BidForm(forms.ModelForm):
         exclude = ('product', 'user')
         
 def on_watchlist(request, id):
+    """
+    Checks if the user logged has a watchlist and if the product is on his
+    watchlist.
+    """
     user = request.user
     try:
         watchlist = user.watchlist
@@ -159,21 +163,14 @@ def listing(request, id):
     
 def add_watchlist(request, id):
     user = request.user
-    try:
-        watchlist = user.watchlist
-    except watchlist.DoesNotExist:
-        watchlist = Watchlist.objects.create(user=user)
-    try:
-        watchlist.product.get(pk=id)
-    except:
-        request.session['watchlisterror'] = True
-    if request.method == 'POST': 
+    if not on_watchlist(request, id):
         try:
-            watchlist.product.get(pk=id)
+            watchlist = Watchlist.objects.create(user=user)
         except:
-            print('no except')
-            watchlist.product.add((id))
-            watchlist.save()
+            watchlist = user.watchlist
+    if request.method == 'POST': 
+        watchlist.product.add((id))
+        watchlist.save()
         return HttpResponseRedirect(reverse('listing', args=[id]))
     return HttpResponseRedirect(reverse('listing', args=[id]))
         
