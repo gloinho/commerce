@@ -60,3 +60,12 @@ class Comment(models.Model):
     
     def __str__(self) -> str:
         return f"{self.user}'s comment"
+
+class Watchlist(models.Model):
+    """
+    """
+    user = models.OneToOneField(User,primary_key=True,on_delete=models.CASCADE, related_name='watchlist')
+    product = models.ManyToManyField(Product,blank=True, related_name='watchlisted')
+    
+    def __str__(self) -> str:
+        return f"{self.user.username}'s watchlist."
