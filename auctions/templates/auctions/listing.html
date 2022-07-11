@@ -20,6 +20,14 @@
         {{bidform}}
         <input type="submit">
    </form>
+
+   {%if not onwatchlist %}
+        <form action="{%url 'add_watchlist' product.id %}" method="POST">
+            {%csrf_token%}
+            <input type="submit">
+        </form>
+    {%endif%}
+
    <h1>Details</h1>
    {{product.listed_by}}
    {{product.category}}

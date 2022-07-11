@@ -115,7 +115,15 @@ class BidForm(forms.ModelForm):
         model = Bid
         fields = ['bid_price']
         exclude = ('product', 'user')
-
+        
+def on_watchlist(request, id):
+    user = request.user
+    try:
+        watchlist = user.watchlist
+        watchlist.product.get(pk=id)
+        return True
+    except:
+        return False
         
 def listing(request, id):
     listing = Product.objects.get(id=int(id))
@@ -137,7 +145,7 @@ def listing(request, id):
                 return render(request, 'auctions/listing.html', {
                     'message': message,
                     'bidform': BidForm,
-                    'product': listing
+                    'product': listing,
                 }) 
             else:
                 bid.save()
@@ -145,5 +153,29 @@ def listing(request, id):
             return HttpResponse('error')
     return render(request, 'auctions/listing.html', {
         'bidform': BidForm,
-        'product': listing
+        'product': listing,
+        'onwatchlist': on_watchlist(request, id)
     }) 
+    
+def add_watchlist(request, id):
+    user = request.user
+    try:
+        watchlist = user.watchlist
+    except watchlist.DoesNotExist:
+        watchlist = Watchlist.objects.create(user=user)
+    try:
+        watchlist.product.get(pk=id)
+    except:
+        request.session['watchlisterror'] = True
+    if request.method == 'POST': 
+        try:
+            watchlist.product.get(pk=id)
+        except:
+            print('no except')
+            watchlist.product.add((id))
+            watchlist.save()
+        return HttpResponseRedirect(reverse('listing', args=[id]))
+    return HttpResponseRedirect(reverse('listing', args=[id]))
+        
+
+    
