@@ -7,14 +7,20 @@ body {
     height: 200px;
 }
 
-.card-title{
-    font-weight: bold;
-}
-
-.card-body{
-    text-align: center;
-}
-
 .products{
     display: flex;
+}
+
+.listing{
+    width: 400px;
+}
+
+.section{
+    margin: 16px 0 16px 0;
+    border: solid #f7f7f9;
+    padding: 10px;
+}
+
+button{
+    margin-top: 5px;
 }

@@ -16,7 +16,7 @@
                 Not signed in.
             {% endif %}
         </div>
-        <ul class="nav">
+        <ul class="nav ">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
             </li>
@@ -29,6 +29,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'user_watchlist' user.username %}">Watchlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'new_product'%}">Create Listing</a>
                 </li>
             {% else %}
                 <li class="nav-item">

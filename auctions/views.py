@@ -122,7 +122,10 @@ class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
         fields = ['bid_price']
-        widgets = {'bid_price': forms.NumberInput(attrs={'min':0})}
+        labels = {'bid_price':''}
+        widgets = {'bid_price': forms.NumberInput(attrs={'min':0, 
+                                                         'class': 'form-control',
+                                                         'aria-describedby':'bidplaced',})}
         exclude = ('product', 'user')
                        
 def on_watchlist(request, id):
@@ -142,9 +145,11 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['comment']
-        widgets = {'description': forms.Textarea(attrs={"id":"description", 
-                                                 "class":"form-control", 
-                                                 "placeholder":"Product Description"}),}
+        labels = {'comment':''}
+        widgets = {'comment': forms.TextInput(attrs={
+                                                "id":"comment",
+                                                 "class":"form-control",
+                                                 "placeholder":"Comment on this listing." }),}
         
 def add_comment(request, id):
     user = request.user
@@ -185,6 +190,9 @@ def listing(request, id):
                     'message': message,
                     'bidform': BidForm,
                     'product': listing,
+                    'onwatchlist': on_watchlist(request, id),
+                    'commentform': CommentForm,
+                    'comments':comments
                 }) 
             else:
                 bid.save()

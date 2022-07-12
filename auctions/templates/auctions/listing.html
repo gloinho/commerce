@@ -2,69 +2,117 @@
 {% load auction_extras %}
 
 {% block body %}
-<h1>{{product.product}}</h1>
-<picture>
-    {%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static product|get_image %}">
-</picture>
-{% if product.is_active %}
+    <div class="section">
+        <div class="title">
+            <h1>Listing: {{product.product}}</h1>
+            {% if user.is_authenticated %}
+                {%if not onwatchlist %}
+                    <form action="{%url 'watchlist' product.id %}" method="POST">
+                        <div class="form-group">
+                            {%csrf_token%}
+                            <button type="submit" class="btn btn-primary btn-sm" name="add_to_watchlist">Add to Watchlist</button>
+                        </div>
+                    </form>
+                {%else%}
+                    <form action="{% url 'watchlist' product.id %}" method="POST">
+                        <div class="form-group">
+                            {%csrf_token%}
+                            <button type="submit" class="btn btn-dark btn-sm" name="remove_from_watchlist">Remove from Watchlist</button>
+                        </div>       
+                    </form>   
+                {%endif%}
+            {%endif%}
+        </div>
+        <div class="listing">
+            <figure class="figure">
+                {%load static%}<img src="{%static product|get_image %}" class="figure-img img-fluid rounded" alt="{{product.product}}">
+                <figcaption class="figure-caption">Description: {{product.description}}</figcaption>
+            </figure>
+        </div>
+    </div>
+
+    <div class="section">
+        {% if product.is_active %}
         {% if product|get_bid == None %} 
-            <h1>Current price: ${{product.first_price}}</h1>
+            <h3>${{product.first_price}}</h3>
         {%else%}
-            <h1>Current price: ${{product|get_bid}}</h1>
+            <h3>${{product|get_bid}}</h3>
         {%endif%}
+
         {% if user.is_authenticated %}
             {% if product.listed_by.username != user.username%}
-            <form action="{% url 'listing' product.id %}" method="POST">
-                {%csrf_token%}
-                {%if message %}
-                    <h1>{{message}}</h1> # TODO APLLY CSS 
-                {%endif%}
-                {{bidform}}
-                <input type="submit">
-            </form>
+                <form action="{% url 'listing' product.id %}" method="POST">
+                    <div class="form-group">
+                        {%csrf_token%}
+                        {{bidform}}
+                        {%if message %}
+                            <small id="bidplaced" class="form-text text-muted">{{message}}</small>
+                        {%endif%}
+                        <button type="submit" class="btn btn-primary">Place Bid</button>
+                    </div>
+                </form>
             {%else%}
                 <form action="{%url 'close_listing' product.id %}" method="POST">
-                    {%csrf_token%}
-                    <button type="submit" name="close_listing">Close Listing</button>
+                    <div class="form-group">
+                        {%csrf_token%}
+                        <button type="submit" class="btn btn-danger" name="close_listing">Close Listing</button>
+                    </div>
                 </form>
             {%endif%}
-        {%if not onwatchlist %}
-            <form action="{%url 'watchlist' product.id %}" method="POST">
-                {%csrf_token%}
-                <button type="submit" name="add_to_watchlist">Add to Watchlist</button>
-            </form>
-        {%else%}
-            <form action="{% url 'watchlist' product.id %}" method="POST">
-                {%csrf_token%}
-                <button type="submit" name="remove_from_watchlist">Remove from Watchlist</button>
-            </form>
-        {%endif%}
-        {% else %}
-            Not signed in.
         {% endif %}
-{%else%}
-    {% if product|get_bid == None %} 
-    <h1>Final price: ${{product.first_price}}</h1>
-    {%else%}
-    <h1>Final price: ${{product|get_bid}}</h1>
-    {%endif%}
-    {%if product.productbid.last.user.username == user.username %}
-    <h1>Congratulations! You are the winner! </h1>
-    {%endif%}
-{%endif%}
- 
-   <h1>Details</h1>
-   {{product.listed_by}}
-   {{product.category}}
-   <h1>Comments</h1>
-   <form action="{%url 'add_comment' product.id %}" method="POST">
-    {%csrf_token%}
-    {{commentform}}
-    <input type="submit">
-   </form>
-   {%if comments %}
-        {% for comment in comments%}
-            <h1>{{comment.comment}}</h1><h5>{{comment.user}} {{comment.comment_date}}</h5>
-        {%endfor%}
-    {%endif%}
+
+        {%else%}
+            {% if product|get_bid == None %} 
+            <h3>Final price: ${{product.first_price}}</h3>
+            {%else%}
+            <h3>Final price: ${{product|get_bid}}</h3>
+            {%endif%}
+            {%if product.productbid.last.user.username == user.username %}
+            <h3>Congratulations! You are the winner! </h3>
+            {%endif%}
+        {%endif%}
+    </div>
+
+    <div class="section">
+        <h3>Details</h3>
+        <ul>
+            <li>Listed by: {{product.listed_by}}</li>
+            <li>Category: <a href="{%url 'category' product.category %}">{{product.category}}</a></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>Comments</h3>
+        {% if user.is_authenticated %}
+        <form action="{%url 'add_comment' product.id %}" method="POST">
+            <div class="form-group">
+                {%csrf_token%}
+                {{commentform}}
+                <button type="submit" class="btn btn-primary">Comment</button>
+            </div>
+        </form>
+        {%else%}
+        Login to comment.
+        {%endif%}
+        
+
+        {%if comments %}
+                {% for comment in comments%}
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="card w-100" style="width: 18rem; margin-bottom: 16px;">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{comment.user}}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{comment.comment_date}}</h6>
+                                    <p class="card-text">{{comment.comment}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
+        {%endif%}
+    </div>
+    
 {% endblock %}
