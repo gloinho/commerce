@@ -238,9 +238,10 @@ def user_watchlist(request, user):
     return render(request, 'auctions/watchlist.html',{'listings':watchlist})
         
 def categories(request):
-    categories = []
+    categories = {}
     for category in Product.CATEGORY_CHOICES:
-        categories.append(category[0])
+        category = category[0]
+        categories[category] = Product.objects.filter(category=category).count()
     return render(request, 'auctions/categories.html', {'categories': categories})         
 
 def category(request, category):

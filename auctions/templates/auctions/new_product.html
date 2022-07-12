@@ -1,5 +1,9 @@
 {% extends 'auctions/layout.html' %}
 
+
+{%block title%}
+    New Product
+{%endblock%}
 {% block body %}
     <div>
         <form action="{% url 'new_product' %}" method="POST" enctype="multipart/form-data" >
