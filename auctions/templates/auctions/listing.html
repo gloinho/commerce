@@ -92,12 +92,12 @@
             </div>
         </form>
         {%else%}
-        Login to comment.
+            <a href="{% url 'login' %}">Login</a> to comment.
         {%endif%}
         
 
         {%if comments %}
-                {% for comment in comments%}
+            {% for comment in comments%}
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                 </div>
-                {%endfor%}
+            {%endfor%}
         {%endif%}
     </div>
     

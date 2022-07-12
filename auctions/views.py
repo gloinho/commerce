@@ -235,7 +235,7 @@ def close_listing(request, id):
 def user_watchlist(request, user):
     user = request.user
     watchlist = Watchlist.objects.get(user=user).product.all()
-    return render(request, 'auctions/watchlist.html',{'watchlists':watchlist})
+    return render(request, 'auctions/watchlist.html',{'listings':watchlist})
         
 def categories(request):
     categories = []

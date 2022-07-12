@@ -1,24 +1,55 @@
-{% extends "auctions/layout.html" %}
+{%extends "auctions/layout.html"%}
 {% load auction_extras %}
 
+{%block body%}
+    <h2>Active Listings</h2>
+    {% for listing in listings%}
+        {%if listing.is_active %}
+            <div class="card" style="width: 400px; margin: 20px;">
+                <div class="img-thumbnail listings">              
+                    <div class="image" style="text-align:center">
+                        <picture>
+                            <a href="{% url 'listing' listing.id %}">{%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static listing|get_image %}"></a>
+                        </picture> 
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'listing' listing.id %}"><div class="card-title" id="listing">{{listing.product}}</div></a>
+                        <div class='card-text'id="date">{{listing.register_date}}</div>
+                        {%if listing.is_active %}
+                        <span class="badge badge-success">Active</span>
+                        <div class="card-text" id="price">Current Price: ${{listing|get_bid}}</div>
+                        {%else%}
+                        <span class="badge badge-success">Closed</span>
+                        <div class="card-text" id="price">Final Price: ${{listing|get_bid}}</div>
+                        {%endif%}
+                        <div class='card-text'id="description">{{listing.description}}</div>
 
-{% block body %}
-<h1>Your watchlist</h1>
-{%for watchlist in watchlists%}
-    <div class="card" style="width: 400px; margin: 20px;">
-        <div class="img-thumbnail listings">              
-            <div class="image" style="text-align:center">
-                <picture>
-                    <a href="{% url 'listing' watchlist.id %}">{%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static watchlist|get_image %}"></a>
-                </picture> 
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <a href="{% url 'listing' watchlist.id %}"><div class="card-title" id="watchlist">{{watchlist.product}}</div></a>
-                <div class="card-text" id="price">Current Price: ${{watchlist|get_bid}}</div>
-                <div class='card-text'id="date">{{watchlist.register_date}}</div>
-                <div class='card-text'id="description">{{watchlist.description}}</div>
-            </div>
-        </div>
-    </div>
-{%endfor%}
+        {%endif%}
+    {% endfor %}
+    <h2>Closed Listings</h2>
+        {% for listing in listings%}
+            {%if not listing.is_active %}
+                <div class="card" style="width: 400px; margin: 20px;">
+                    <div class="img-thumbnail listings">              
+                        <div class="image" style="text-align:center">
+                            <picture>
+                                <a href="{% url 'listing' listing.id %}">{%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static listing|get_image %}"></a>
+                            </picture> 
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url 'listing' listing.id %}"><div class="card-title" id="listing">{{listing.product}}</div></a>
+                            <div class='card-text'id="date">{{listing.register_date}}</div>
+                            <span class="badge badge-danger">Closed</span>
+                            <div class="card-text" id="price">Final Price: ${{listing|get_bid}}</div>
+                            <div class='card-text'id="description">{{listing.description}}</div>
+
+                        </div>
+                    </div>
+                </div>
+            {%endif%}
+        {% endfor %}
 {%endblock%}
+

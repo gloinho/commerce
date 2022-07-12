@@ -3,8 +3,9 @@
 
 
 {% block body %}
+    {%block title%}
     <h2>Active Listings</h2>
-    {%block card%}
+    {%endblock%}
     {% for listing in listings%}
         {%if listing.is_active %}
             <div class="card" style="width: 400px; margin: 20px;">
@@ -31,5 +32,4 @@
             </div>
         {%endif%}
     {% endfor %}
-    {%endblock%}
 {% endblock %}
