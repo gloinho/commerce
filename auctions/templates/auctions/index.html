@@ -14,9 +14,16 @@
             </div>
             <div class="card-body">
                 <a href="{% url 'listing' product.id %}"><div class="card-title" id="product">{{product.product}}</div></a>
-                <div class="card-text" id="price">Price: ${{product.first_price}}</div>
                 <div class='card-text'id="date">{{product.register_date}}</div>
+                {%if product.is_active %}
+                <div class='card-text'id="active">The listing is active!</div>
+                <div class="card-text" id="price">Current Price: ${{product|get_bid}}</div>
+                {%else%}
+                <div class='card-text'id="active">The listing is closed!</div>
+                <div class="card-text" id="price">Final Price: ${{product|get_bid}}</div>
+                {%endif%}
                 <div class='card-text'id="description">{{product.description}}</div>
+
             </div>
         </div>
     </div>

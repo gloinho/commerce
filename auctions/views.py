@@ -216,5 +216,10 @@ def close_listing(request, id):
         return HttpResponseRedirect(reverse('listing', args=[id]))
     return HttpResponseRedirect(reverse('listing', args=[id]))
         
-       
+def user_watchlist(request, user):
+    user = request.user
+    watchlist = Watchlist.objects.get(user=user).product.all()
+    return render(request, 'auctions/watchlist.html',{'watchlists':watchlist})
+        
+          
                 

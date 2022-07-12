@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+{% load auction_extras %}
+
+
+{% block body %}
+<h1>Your watchlist</h1>
+{%for watchlist in watchlists%}
+    <div class="card" style="width: 400px; margin: 20px;">
+        <div class="img-thumbnail listings">              
+            <div class="image" style="text-align:center">
+                <picture>
+                    <a href="{% url 'listing' watchlist.id %}">{%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static watchlist|get_image %}"></a>
+                </picture> 
+            </div>
+            <div class="card-body">
+                <a href="{% url 'listing' watchlist.id %}"><div class="card-title" id="watchlist">{{watchlist.product}}</div></a>
+                <div class="card-text" id="price">Current Price: ${{watchlist|get_bid}}</div>
+                <div class='card-text'id="date">{{watchlist.register_date}}</div>
+                <div class='card-text'id="description">{{watchlist.description}}</div>
+            </div>
+        </div>
+    </div>
+{%endfor%}
+{%endblock%}
