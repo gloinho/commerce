@@ -64,6 +64,7 @@ class Comment(models.Model):
 
 class Watchlist(models.Model):
     """
+    Add a listing to a user's watchlist.
     """
     user = models.OneToOneField(User,primary_key=True,on_delete=models.CASCADE, related_name='watchlist')
     product = models.ManyToManyField(Product,related_name='watchlisted')

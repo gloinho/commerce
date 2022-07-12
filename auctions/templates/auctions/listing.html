@@ -48,10 +48,23 @@
     {%else%}
     <h1>Final price: ${{product|get_bid}}</h1>
     {%endif%}
-    <h1>Winner: {{product.productbid.last.user.username}}</h1>
+    {%if product.productbid.last.user.username == user.username %}
+    <h1>Congratulations! You are the winner! </h1>
+    {%endif%}
 {%endif%}
  
    <h1>Details</h1>
    {{product.listed_by}}
    {{product.category}}
+   <h1>Comments</h1>
+   <form action="{%url 'add_comment' product.id %}" method="POST">
+    {%csrf_token%}
+    {{commentform}}
+    <input type="submit">
+   </form>
+   {%if comments %}
+        {% for comment in comments%}
+            <h1>{{comment.comment}}</h1><h5>{{comment.user}} {{comment.comment_date}}</h5>
+        {%endfor%}
+    {%endif%}
 {% endblock %}

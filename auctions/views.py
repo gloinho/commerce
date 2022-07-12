@@ -116,7 +116,7 @@ class BidForm(forms.ModelForm):
         fields = ['bid_price']
         widgets = {'bid_price': forms.NumberInput(attrs={'min':0})}
         exclude = ('product', 'user')
-        
+                       
 def on_watchlist(request, id):
     """
     Checks if the user logged has a watchlist and if the product is on his
@@ -129,11 +129,37 @@ def on_watchlist(request, id):
         return True
     except:
         return False
+    
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['comment']
+        widgets = {'description': forms.Textarea(attrs={"id":"description", 
+                                                 "class":"form-control", 
+                                                 "placeholder":"Product Description"}),}
         
+def add_comment(request, id):
+    user = request.user
+    listing = Product.objects.get(pk=int(id))
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = user
+            comment.product = listing
+            comment.comment = form.cleaned_data['comment']
+            comment.save()
+        return HttpResponseRedirect(reverse('listing', args=[id]))
+    return HttpResponseRedirect(reverse('listing', args=[id]))      
+    
 def listing(request, id):
     listing = Product.objects.get(id=int(id))
     user = request.user
     min_bid = Bid.objects.filter(product = listing.id).last()
+    try:
+        comments = Comment.objects.filter(product=listing)
+    except:
+        comments = None
     if not min_bid:
         min_bid = listing.first_price
     else:
@@ -159,7 +185,9 @@ def listing(request, id):
     return render(request, 'auctions/listing.html', {
         'bidform': BidForm,
         'product': listing,
-        'onwatchlist': on_watchlist(request, id)
+        'onwatchlist': on_watchlist(request, id),
+        'commentform': CommentForm,
+        'comments':comments
     }) 
     
 def watchlist(request, id):
@@ -188,4 +216,5 @@ def close_listing(request, id):
         return HttpResponseRedirect(reverse('listing', args=[id]))
     return HttpResponseRedirect(reverse('listing', args=[id]))
         
-        
+       
+                
