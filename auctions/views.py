@@ -91,8 +91,9 @@ class ProductForm(forms.ModelForm):
                                                     "class":"form-control", 
                                                     "id":"price", 
                                                     "placeholder":"Enter the inicial price"}),
-            'image': forms.ClearableFileInput(attrs={"class":"custom-file-input", 
-                                                     "id":"image",}),
+            'image': forms.URLInput(attrs={"class":"form-control", 
+                                                     "id":"image",
+                                                     'placeholder':'Enter image URL'}),
             'category': forms.Select(attrs={"id":"category", "class":"custom-select"}),
             'description': forms.Textarea(attrs={"id":"description", 
                                                  "class":"form-control", 
@@ -108,7 +109,7 @@ def new_product(request):
     # FILES will only contain data if the request method was POST and 
     # the <form> that posted to the request had enctype="multipart/form-data". 
     # Otherwise, FILES will be a blank dictionary-like object.
-        form = ProductForm(request.POST, request.FILES) 
+        form = ProductForm(request.POST) 
         if form.is_valid():
             product = form.save(commit=False)
             product.listed_by = user
@@ -234,7 +235,10 @@ def close_listing(request, id):
         
 def user_watchlist(request, user):
     user = request.user
-    watchlist = Watchlist.objects.get(user=user).product.all()
+    try:
+        watchlist = Watchlist.objects.get(user=user).product.all()
+    except:
+        watchlist = None
     return render(request, 'auctions/watchlist.html',{'listings':watchlist})
         
 def categories(request):

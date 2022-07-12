@@ -16,7 +16,7 @@
                         <a href="{% url 'listing' listing.id %}"><div class="card-title" id="listing">{{listing.product}}</div></a>
                         <div class="image" style="text-align:center">
                             <picture>
-                                <a href="{% url 'listing' listing.id %}">{%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static listing|get_image %}"></a>
+                                <a href="{% url 'listing' listing.id %}"><img class="card-img-top img-fluid img-thumbnail" src="{{listing.image}}"></a>
                             </picture> 
                         </div>
                         <div class="card-text"><span class="badge badge-danger">Status: Closed</span></div>

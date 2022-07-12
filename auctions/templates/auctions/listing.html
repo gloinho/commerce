@@ -30,7 +30,7 @@
         </div>
         <div class="listing">
             <figure class="figure">
-                {%load static%}<img src="{%static product|get_image %}" class="figure-img img-fluid rounded" alt="{{product.product}}">
+                <img src="{{product.image}}" class="figure-img img-fluid rounded" alt="{{product.product}}">
                 <figcaption class="figure-caption">Description: {{product.description}}</figcaption>
             </figure>
         </div>
