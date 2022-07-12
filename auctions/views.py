@@ -11,9 +11,17 @@ from django import forms
 
 def index(request):
     """
-    Show all listings
+    Show all active listings
     """
     return render(request, "auctions/index.html", {
+        'listings': Product.objects.all()
+    })
+    
+def closed_listings(request):
+    """
+    Show all closed listings
+    """
+    return render(request, "auctions/closed_listings.html", {
         'listings': Product.objects.all()
     })
 
@@ -230,4 +238,6 @@ def categories(request):
 def category(request, category):
     listings = Product.objects.filter(category=category)
     return render(request, 'auctions/category.html', {'listings': listings})
+
+
     

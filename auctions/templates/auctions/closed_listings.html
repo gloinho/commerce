@@ -3,10 +3,10 @@
 
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Closed Listings</h2>
     {%block card%}
     {% for listing in listings%}
-        {%if listing.is_active %}
+        {%if not listing.is_active %}
             <div class="card" style="width: 400px; margin: 20px;">
                 <div class="img-thumbnail listings">              
                     <div class="image" style="text-align:center">
