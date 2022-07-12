@@ -17,17 +17,17 @@
                     </div>
                     <div class="card-body">
                         <a href="{% url 'listing' listing.id %}"><div class="card-title" id="listing">{{listing.product}}</div></a>
-                        <div class='card-text'id="date">{{listing.register_date}}</div>
                         {%if listing.is_active %}
-                        <span class="badge badge-success">Active</span>
+                        <div class="card-text"><span class="badge badge-success">Status: Active</span></div>
                         <div class="card-text" id="price">Current Price: ${{listing|get_bid}}</div>
                         {%else%}
-                        <span class="badge badge-success">Closed</span>
+                        <div class="card-text"><span class="badge badge-danger">Status: Closed</span></div>
                         <div class="card-text" id="price">Final Price: ${{listing|get_bid}}</div>
                         {%endif%}
+                        <h6 class="card-text mb-2 text-muted" id="date">Created {{listing.register_date}}</h6>
                         <div class='card-text'id="description">{{listing.description}}</div>
 
-                    </div>
+                    </div>  
                 </div>
             </div>
         {%endif%}

@@ -7,6 +7,12 @@ body {
     height: 200px;
 }
 
+#listing.card-title{
+    text-align: center;
+    font-weight: 600;
+    font-size: 20px;
+    background-color: #f7f7f9;
+}
 .products{
     display: flex;
 }
