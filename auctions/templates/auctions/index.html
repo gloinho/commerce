@@ -3,29 +3,31 @@
 
 
 {% block body %}
-    <h2>Active Listings</h2>
-    {% for product in products%}
+    <h2>Listings</h2>
+    {%block card%}
+    {% for listing in listings%}
     <div class="card" style="width: 400px; margin: 20px;">
         <div class="img-thumbnail listings">              
             <div class="image" style="text-align:center">
                 <picture>
-                    <a href="{% url 'listing' product.id %}">{%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static product|get_image %}"></a>
+                    <a href="{% url 'listing' listing.id %}">{%load static%}<img class="card-img-top img-fluid img-thumbnail" src="{%static listing|get_image %}"></a>
                 </picture> 
             </div>
             <div class="card-body">
-                <a href="{% url 'listing' product.id %}"><div class="card-title" id="product">{{product.product}}</div></a>
-                <div class='card-text'id="date">{{product.register_date}}</div>
-                {%if product.is_active %}
+                <a href="{% url 'listing' listing.id %}"><div class="card-title" id="listing">{{listing.product}}</div></a>
+                <div class='card-text'id="date">{{listing.register_date}}</div>
+                {%if listing.is_active %}
                 <div class='card-text'id="active">The listing is active!</div>
-                <div class="card-text" id="price">Current Price: ${{product|get_bid}}</div>
+                <div class="card-text" id="price">Current Price: ${{listing|get_bid}}</div>
                 {%else%}
                 <div class='card-text'id="active">The listing is closed!</div>
-                <div class="card-text" id="price">Final Price: ${{product|get_bid}}</div>
+                <div class="card-text" id="price">Final Price: ${{listing|get_bid}}</div>
                 {%endif%}
-                <div class='card-text'id="description">{{product.description}}</div>
+                <div class='card-text'id="description">{{listing.description}}</div>
 
             </div>
         </div>
     </div>
     {% endfor %}
+    {%endblock%}
 {% endblock %}

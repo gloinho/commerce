@@ -14,7 +14,7 @@ def index(request):
     Show all listings
     """
     return render(request, "auctions/index.html", {
-        'products': Product.objects.all()
+        'listings': Product.objects.all()
     })
 
 def login_view(request):
@@ -221,5 +221,13 @@ def user_watchlist(request, user):
     watchlist = Watchlist.objects.get(user=user).product.all()
     return render(request, 'auctions/watchlist.html',{'watchlists':watchlist})
         
-          
-                
+def categories(request):
+    categories = []
+    for category in Product.CATEGORY_CHOICES:
+        categories.append(category[0])
+    return render(request, 'auctions/categories.html', {'categories': categories})         
+
+def category(request, category):
+    listings = Product.objects.filter(category=category)
+    return render(request, 'auctions/category.html', {'listings': listings})
+    
