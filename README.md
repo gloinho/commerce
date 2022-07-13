@@ -1,6 +1,13 @@
 # Project 2 - Commerce
 > All specifications and instructions provided by [CS50 Web](https://cs50.harvard.edu/web/2020/projects/2/commerce/)
 
+[Demonstration](#demonstration)
+-------------------------------
+
+
+https://user-images.githubusercontent.com/99846614/178798145-46202c1f-0a05-4aa5-96c4-3b917f9c86be.mp4
+
+
 [Specification](#specification)
 -------------------------------
 
