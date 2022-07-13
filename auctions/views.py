@@ -93,7 +93,8 @@ class ProductForm(forms.ModelForm):
                                                     "placeholder":"Enter the inicial price"}),
             'image': forms.URLInput(attrs={"class":"form-control", 
                                                      "id":"image",
-                                                     'placeholder':'Enter image URL'}),
+                                                     'placeholder':'Enter image URL',
+                                                     'required':False}),
             'category': forms.Select(attrs={"id":"category", "class":"custom-select"}),
             'description': forms.Textarea(attrs={"id":"description", 
                                                  "class":"form-control", 
@@ -106,9 +107,6 @@ def new_product(request):
     """
     user = request.user
     if request.method == 'POST':
-    # FILES will only contain data if the request method was POST and 
-    # the <form> that posted to the request had enctype="multipart/form-data". 
-    # Otherwise, FILES will be a blank dictionary-like object.
         form = ProductForm(request.POST) 
         if form.is_valid():
             product = form.save(commit=False)

@@ -32,7 +32,7 @@
             <div class="listing">
                 <div class="col">
                     <figure class="figure text-center">
-                        <img src="{{listing.image}}" class="figure-img img-fluid rounded" alt="{{listing.product}}">
+                        <img src="{{listing.image|default:'https://alnoorfoods.co.uk/wp-content/uploads/2021/01/noimage.jpg'}}" class="figure-img img-fluid rounded" alt="{{listing.product}}">
                         <figcaption class="figure-caption">Description: {{listing.description}}</figcaption>
                     </figure> 
                 </div>

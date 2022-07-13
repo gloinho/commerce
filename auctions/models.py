@@ -28,9 +28,9 @@ class Product(models.Model):
     product = models.CharField(max_length=64)
     first_price = models.DecimalField(max_digits=10, decimal_places=2)
     register_date = models.DateTimeField(auto_now_add=True)
-    image = models.URLField()
+    image = models.URLField(blank=True)
     category = models.CharField(max_length=19, choices=CATEGORY_CHOICES, default='No Category')
-    description = models.CharField(max_length=500, blank=True)
+    description = models.CharField(max_length=1000, blank=True)
     listed_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listedby')
     is_active = models.BooleanField(default=True)
     
