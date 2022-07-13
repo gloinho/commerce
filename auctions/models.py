@@ -36,7 +36,7 @@ class Product(models.Model):
     
     
     def __str__(self) -> str:
-        return f'{self.product}: R$: {self.first_price}'
+        return f'{self.product}'
     
 class Bid(models.Model):
     """
