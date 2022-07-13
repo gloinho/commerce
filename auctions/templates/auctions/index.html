@@ -3,26 +3,35 @@
 
 
 {% block body %}
-    <h2>Active Listings</h2>
-    {% for listing in listings%}
-        {%if listing.is_active %}
-            <div class="card" style="width: 400px; margin: 20px;">
-                <div class="img-thumbnail listings">              
-                    <div class="card-body">
-                        <a href="{% url 'listing' listing.id %}"><div class="card-title" id="listing">{{listing.product}}</div></a>
-                        <div class="image" style="text-align:center">
-                            <picture>
-                                <a href="{% url 'listing' listing.id %}"><img class="card-img-top img-fluid img-thumbnail" src="{{listing.image}}"></a>
-                            </picture> 
+    {%block active-listings%}
+        <h2>Active Listings</h2>
+        <div class="container-fluid">
+            <div class="row">
+                {% for listing in listings%}
+                {%if listing.is_active %}
+                    <div class="col-4">
+                            <div class="card" style="width: 400px; margin: 20px;">
+                                <div class="img-thumbnail listings">              
+                                    <div class="card-body">
+                                        <a href="{% url 'listing' listing.id %}"><div class="card-title" id="listing">{{listing.product}}</div></a>
+                                        <div class="image" style="text-align:center">
+                                            <picture>
+                                                <a href="{% url 'listing' listing.id %}"><img class="card-img-top img-fluid img-thumbnail" src="{{listing.image}}"></a>
+                                            </picture> 
+                                        </div>
+                                        <div class="card-text"><span class="badge badge-success">Status: Active</span></div>
+                                        <div class="card-text" id="price">Current Price: ${{listing|get_bid}}</div>
+                                        <div class='card-text'id="description">{{listing.description}}</div>
+                                        <span class="card-text mb-2 text-muted" id="date">Created {{listing.register_date}}</span>
+                                    </div>  
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-text"><span class="badge badge-success">Status: Active</span></div>
-                        <div class="card-text" id="price">Current Price: ${{listing|get_bid}}</div>
-                        <div class='card-text'id="description">{{listing.description}}</div>
-                        <span class="card-text mb-2 text-muted" id="date">Created {{listing.register_date}}</span>
-
-                    </div>  
-                </div>
+                    {%endif%}
+                {% endfor %}
             </div>
-        {%endif%}
-    {% endfor %}
+        </div>
+    {%endblock%}
+    {%block closed-listings%}
+    {%endblock%}
 {% endblock %}

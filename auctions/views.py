@@ -250,7 +250,8 @@ def categories(request):
 
 def category(request, category):
     listings = Product.objects.filter(category=category)
-    return render(request, 'auctions/category.html', {'listings': listings})
+    return render(request, 'auctions/category.html', {'listings': listings,
+                                                      'category': category})
 
 
     

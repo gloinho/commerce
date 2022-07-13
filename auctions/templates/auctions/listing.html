@@ -28,11 +28,15 @@
                 {%endif%}
             {%endif%}
         </div>
-        <div class="listing">
-            <figure class="figure">
-                <img src="{{product.image}}" class="figure-img img-fluid rounded" alt="{{product.product}}">
-                <figcaption class="figure-caption">Description: {{product.description}}</figcaption>
-            </figure>
+        <div class="row justify-content-md-center">
+            <div class="listing">
+                <div class="col">
+                    <figure class="figure text-center">
+                        <img src="{{product.image}}" class="figure-img img-fluid rounded" alt="{{product.product}}">
+                        <figcaption class="figure-caption">Description: {{product.description}}</figcaption>
+                    </figure> 
+                </div>
+            </div>
         </div>
     </div>
 
