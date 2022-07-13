@@ -3,23 +3,23 @@
 
 
 {%block title%}
-    {{product.product}}
+    {{listing.product}}
 {%endblock%}
 
 {% block body %}
     <div class="section">
         <div class="title">
-            <h1>Listing: {{product.product}}</h1>
+            <h1>Listing: {{listing.product}}</h1>
             {% if user.is_authenticated %}
                 {%if not onwatchlist %}
-                    <form action="{%url 'watchlist' product.id %}" method="POST">
+                    <form action="{%url 'watchlist' listing.id %}" method="POST">
                         <div class="form-group">
                             {%csrf_token%}
                             <button type="submit" class="btn btn-primary btn-sm" name="add_to_watchlist">Add to Watchlist</button>
                         </div>
                     </form>
                 {%else%}
-                    <form action="{% url 'watchlist' product.id %}" method="POST">
+                    <form action="{% url 'watchlist' listing.id %}" method="POST">
                         <div class="form-group">
                             {%csrf_token%}
                             <button type="submit" class="btn btn-dark btn-sm" name="remove_from_watchlist">Remove from Watchlist</button>
@@ -32,8 +32,8 @@
             <div class="listing">
                 <div class="col">
                     <figure class="figure text-center">
-                        <img src="{{product.image}}" class="figure-img img-fluid rounded" alt="{{product.product}}">
-                        <figcaption class="figure-caption">Description: {{product.description}}</figcaption>
+                        <img src="{{listing.image}}" class="figure-img img-fluid rounded" alt="{{listing.product}}">
+                        <figcaption class="figure-caption">Description: {{listing.description}}</figcaption>
                     </figure> 
                 </div>
             </div>
@@ -41,43 +41,50 @@
     </div>
 
     <div class="section">
-        {% if product.is_active %}
-        {% if product|get_bid == None %} 
-            <h3>${{product.first_price}}</h3>
-        {%else%}
-            <h3>${{product|get_bid}}</h3>
-        {%endif%}
-
-        {% if user.is_authenticated %}
-            {% if product.listed_by.username != user.username%}
-                <form action="{% url 'listing' product.id %}" method="POST">
-                    <div class="form-group">
-                        {%csrf_token%}
-                        {{bidform}}
-                        {%if message %}
-                            <small id="bidplaced" class="form-text text-muted">{{message}}</small>
-                        {%endif%}
-                        <button type="submit" class="btn btn-primary">Place Bid</button>
-                    </div>
-                </form>
+        {% if listing.is_active %}
+            {% if listing|get_bid == None %} 
+                <small class="text-muted">No bids yet!</small>
+                <h3>${{listing.first_price}}</h3>
             {%else%}
-                <form action="{%url 'close_listing' product.id %}" method="POST">
-                    <div class="form-group">
-                        {%csrf_token%}
-                        <button type="submit" class="btn btn-danger" name="close_listing">Close Listing</button>
-                    </div>
-                </form>
+                {%if wasuserlastbidder%}
+                    <small class="text-muted">{{howmanybids}} bids so far. Your bid is the last bid.</small>
+                {%else%}    
+                    <small class="text-muted">{{howmanybids}} bids so far.</small>
+                {%endif%}
+                <h3>${{listing|get_bid}}</h3>
             {%endif%}
-        {% endif %}
 
+            {% if user.is_authenticated %}
+                {% if listing.listed_by.username != user.username%}
+                    <form action="{% url 'listing' listing.id %}" method="POST">
+                        <div class="form-group">
+                            {%csrf_token%}
+                            {{bidform}}
+                            {%if message %}
+                                <small id="bidplaced" class="form-text text-muted">{{message}}</small>
+                            {%endif%}
+                            <button type="submit" class="btn btn-primary">Place Bid</button>
+                        </div>
+                    </form>
+                {%else%}
+                    <form action="{%url 'close_listing' listing.id %}" method="POST">
+                        <div class="form-group">
+                            {%csrf_token%}
+                            <button type="submit" class="btn btn-danger" name="close_listing">Close Listing</button>
+                        </div>
+                    </form>
+                {%endif%}
+            {% endif %}
         {%else%}
-            {% if product|get_bid == None %} 
-            <h3>Final price: ${{product.first_price}}</h3>
+            {% if listing|get_bid == None %} 
+            <h3>Final price: ${{listing.first_price}}</h3>
             {%else%}
-            <h3>Final price: ${{product|get_bid}}</h3>
+            <h3>Final price: ${{listing|get_bid}}</h3>
             {%endif%}
-            {%if product.productbid.last.user.username == user.username %}
-            <h3>Congratulations! You are the winner! </h3>
+            {%if listing.productbid.last.user.username == user.username %}
+            <div class="alert alert-success" role="alert">
+                <h3>Congratulations! You are the winner! </h3>
+            </div>
             {%endif%}
         {%endif%}
     </div>
@@ -85,15 +92,15 @@
     <div class="section">
         <h3>Details</h3>
         <ul>
-            <li>Listed by: {{product.listed_by}}</li>
-            <li>Category: <a href="{%url 'category' product.category %}">{{product.category}}</a></li>
+            <li>Listed by: {{listing.listed_by}}</li>
+            <li>Category: <a href="{%url 'category' listing.category %}">{{listing.category}}</a></li>
         </ul>
     </div>
 
     <div class="section">
         <h3>Comments</h3>
         {% if user.is_authenticated %}
-        <form action="{%url 'add_comment' product.id %}" method="POST">
+        <form action="{%url 'add_comment' listing.id %}" method="POST">
             <div class="form-group">
                 {%csrf_token%}
                 {{commentform}}

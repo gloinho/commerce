@@ -168,16 +168,33 @@ def add_comment(request, id):
     
 def listing(request, id):
     listing = Product.objects.get(id=int(id))
-    user = request.user
+    how_many_bids = listing.productbid.all().count()
     min_bid = Bid.objects.filter(product = listing.id).last()
+    was_user_last_bidder = False
+    user = request.user
+    try:
+        if listing.productbid.all().last().user == user:
+            was_user_last_bidder = True
+    except:
+        was_user_last_bidder = False
+        
     try:
         comments = Comment.objects.filter(product=listing)
     except:
         comments = None
+        
     if not min_bid:
         min_bid = listing.first_price
     else:
         min_bid = min_bid.bid_price
+        
+    context = {'bidform': BidForm,
+                'listing': listing,
+                'onwatchlist': on_watchlist(request, id),
+                'commentform': CommentForm,
+                'comments':comments,
+                'howmanybids':how_many_bids,
+                'wasuserlastbidder':was_user_last_bidder}
     if request.method == 'POST':
         form = BidForm(request.POST)
         if form.is_valid():
@@ -187,25 +204,14 @@ def listing(request, id):
             bid_price = form.cleaned_data['bid_price']
             if bid_price <= min_bid:
                 message = f'Your bid (${bid_price}) is invalid. Needs to be greater than ${min_bid}.'
-                return render(request, 'auctions/listing.html', {
-                    'message': message,
-                    'bidform': BidForm,
-                    'product': listing,
-                    'onwatchlist': on_watchlist(request, id),
-                    'commentform': CommentForm,
-                    'comments':comments
-                }) 
+                context['message'] = message
+                return render(request, 'auctions/listing.html', context) 
             else:
                 bid.save()
+                return HttpResponseRedirect(reverse('listing', args=[id]))
         else:
             return HttpResponse('error')
-    return render(request, 'auctions/listing.html', {
-        'bidform': BidForm,
-        'product': listing,
-        'onwatchlist': on_watchlist(request, id),
-        'commentform': CommentForm,
-        'comments':comments
-    }) 
+    return render(request, 'auctions/listing.html', context) 
     
 def watchlist(request, id):
     user = request.user
